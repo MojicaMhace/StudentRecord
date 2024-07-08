@@ -152,6 +152,33 @@ public class Record implements ActionListener {
             ex.printStackTrace();
         }
     }
+    
+    private void deleteFromDatabase(String studentId) {
+    try {
+        String url = "jdbc:mysql://localhost:3306/db_cite";
+        String user = "mhace";
+        String password = "1234";
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection conn = DriverManager.getConnection(url, user, password);
+
+        String deleteQuery = "DELETE FROM tbl_cite WHERE Student_ID = ?";
+        PreparedStatement pstmt = conn.prepareStatement(deleteQuery);
+        pstmt.setString(1, studentId);
+        
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null,"Row deleted successfully!!!");
+        } else {
+            JOptionPane.showMessageDialog(null,"Failed to delete!!!");
+        }
+
+        pstmt.close();
+        conn.close();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
     @Override
     public void actionPerformed(ActionEvent open) {
         if (open.getSource() == ExitBtn) {
@@ -163,14 +190,10 @@ public class Record implements ActionListener {
             DefaultTableModel model = (DefaultTableModel) tblRecords.getModel();
             int row = tblRecords.getSelectedRow();
             if (row != -1) {
+            String studentId = model.getValueAt(row, 0).toString();
             model.removeRow(row);
-            } else {
-                if (model.getRowCount() == 0) {
-                    JOptionPane.showMessageDialog(null, "Table is Empty!!!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Select a Row!!!");
-                }
-            }
+            deleteFromDatabase(studentId);
+            } 
         }
     }
 
