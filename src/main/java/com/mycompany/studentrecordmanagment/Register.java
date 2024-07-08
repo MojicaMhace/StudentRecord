@@ -221,7 +221,7 @@ public class Register implements ActionListener{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            // Insert into tbl_cite
+            // dtabase galing sa tbl_cite
             String citeQuery = "INSERT INTO tbl_cite (Student_ID, Student_LastName, Student_FirstName, Student_MiddleName, Course, Student_Year, Address, Contact_Number, Birthday, Position, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement prCite = conn.prepareStatement(citeQuery);
             prCite.setString(1, tfStudNunm.getText());
@@ -237,7 +237,7 @@ public class Register implements ActionListener{
             prCite.setString(11, tfOrg.getText());
             prCite.executeUpdate();
 
-            // Insert into tbl_login
+            // para sa tbl database ng tbl_login
             String loginQuery = "INSERT INTO tbl_login (studentnum, password) VALUES (?, ?)";
             PreparedStatement prLogin = conn.prepareStatement(loginQuery);
             prLogin.setString(1, tfStudNunm.getText());

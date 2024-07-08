@@ -10,6 +10,6 @@ package com.mycompany.studentrecordmanagment;
  */
 public class StudentRecordManagment {
     public static void main(String[] args) {
-        new LoginPage();
+        new HomePage();
     }
 }

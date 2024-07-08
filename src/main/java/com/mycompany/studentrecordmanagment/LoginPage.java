@@ -15,6 +15,11 @@ public class LoginPage implements ActionListener {
     private JPasswordField tfPass;
     private JButton btnReg, btnSign;
     private JCheckBox chShow;
+    
+    // Variables for login attempt tracking and freezing
+    private int loginAttempts = 0;
+    private Timer freezeTimer;
+    private boolean isFrozen = false;
 
     public LoginPage() {
         // frame
@@ -156,6 +161,18 @@ public class LoginPage implements ActionListener {
         panel2.add(btnSign);
 
         Acc.setVisible(true);
+
+       //stop na teh the freezer (5)
+        freezeTimer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginAttempts = 0;
+                isFrozen = false;
+                freezeTimer.stop(); 
+                JOptionPane.showMessageDialog(Acc, "You can try logging in again.");
+                btnSign.setEnabled(true); 
+            }
+        });
     }
 
     @Override
@@ -167,34 +184,42 @@ public class LoginPage implements ActionListener {
                 tfPass.setEchoChar('*'); 
             }
         } else if (open.getSource() == btnSign) {
-             String userName = Studnumtf.getText();
-                    String password = new String(tfPass.getPassword());
-                    try {
-                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_cite", "mhace", "1234");
+            if (isFrozen) {
+                JOptionPane.showMessageDialog(Acc, "Please wait before trying again.");
+                return;
+            }
 
-                        PreparedStatement st = connection.prepareStatement("Select studentnum, password from tbl_login where studentnum=? and password=?");
-                        st.setString(1, userName);
-                        st.setString(2, password);
-                        ResultSet rs = st.executeQuery();
-                        if (rs.next()) {
-                            Acc.dispose();
-                            new LoadingScreen();
-                        } else {
-                           
-                            
-                                JOptionPane.showMessageDialog(Acc, "Wrong Username & Password.");
-                            }
-                        }
-                     catch (Exception exception) {
-                        exception.printStackTrace();
+            String userName = Studnumtf.getText();
+            String password = new String(tfPass.getPassword());
+            try {
+                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_cite", "mhace", "1234");
+                PreparedStatement st = connection.prepareStatement("Select studentnum, password from tbl_login where studentnum=? and password=?");
+                st.setString(1, userName);
+                st.setString(2, password);
+                ResultSet rs = st.executeQuery();
+                if (rs.next()) {
+                    Acc.dispose();
+                    new LoadingScreen();
+                } else {
+                    loginAttempts++;
+                    if (loginAttempts >= 5) {
+                        JOptionPane.showMessageDialog(Acc, "Access Denied\nMaximum attempts reached. Please wait 5 seconds before trying again.");
+                        isFrozen = true;
+                        freezeTimer.start();
+                        btnSign.setEnabled(false); 
+                    } else {
+                        JOptionPane.showMessageDialog(Acc, "Wrong Username & Password.\nAttempt: " + loginAttempts + "/5");
                     }
                 }
-
-        else if (open.getSource() == btnReg) {
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        } else if (open.getSource() == btnReg) {
             Acc.dispose();
             new Register();
             Load ld = new Load();
             ld.startLoading();
         }
     }
+
 }
