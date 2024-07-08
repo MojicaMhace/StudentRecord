@@ -21,10 +21,10 @@ public class Register implements ActionListener{
     private ImageIcon iconImage;
     private JPanel depanel,pnlStudId;
     private JLabel BgImg,Registrationlbl, lblRegis, lblStuNum, lblLastName, lblFirstName, lblMiddleName,
-            lblCourse, lblStudYear, lblAddress,lblContact, lblBday, lblPosition, lblOrg;
+            lblCourse, lblStudYear, lblAddress,lblContact, lblBday, lblPosition, lblOrg, lblpass;
 ;
     private JTextField tfStudNunm, tfLastName, tfFirstName, tfMiddleName,
-            tfCourse, tfStudYear, tfAddress, tfContact, tfBday, tfPosition, tfOrg;
+            tfCourse, tfStudYear, tfAddress, tfContact, tfBday, tfPosition, tfOrg, tfpass;
     private JButton btnSubmit, btnReset, ExitBtn;
     Register(){
         //frame
@@ -171,6 +171,16 @@ public class Register implements ActionListener{
         tfOrg.setBounds(602, 340, 200, 30);
         tfOrg.setHorizontalAlignment(JTextField.CENTER);
         depanel.add(tfOrg);
+        
+        lblpass = new JLabel ("Password:");
+        lblpass.setBounds (834, 310, 100, 30);
+        lblpass.setFont(font2);
+        lblpass.setForeground(new Color(255, 255, 255));
+        depanel.add(lblpass);
+        tfpass = new JTextField();
+        tfpass.setBounds(834, 340, 200, 30);
+        tfpass.setHorizontalAlignment(JTextField.CENTER);
+        depanel.add(tfpass);
         //buttn
         btnSubmit = new JButton("SUBMIT");
         btnSubmit.setBounds(140, 450, 200, 30);
@@ -203,13 +213,7 @@ public class Register implements ActionListener{
         
         Acc.setVisible(true);
    }
-
-    @Override
-    public void actionPerformed(ActionEvent open) {
-    if (open.getSource() == ExitBtn) {
-        new HomePage();
-        Acc.dispose();
-    } else if (open.getSource() == btnSubmit) {
+    private void register() {
         try {
             String url = "jdbc:mysql://localhost:3306/db_cite";
             String user = "mhace";
@@ -217,31 +221,39 @@ public class Register implements ActionListener{
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection(url, user, password);
 
-            String query = "INSERT INTO `tbl_cite`(`Student_ID`, `Student_LastName`, `Student_FirstName`, `Student_MiddleName`, `Course`, `Student_Year`, `Address`, `Contact_Number`, `Birthday`, `Position`, `Organization`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement pr = conn.prepareStatement(query);
+            // Insert into tbl_cite
+            String citeQuery = "INSERT INTO tbl_cite (Student_ID, Student_LastName, Student_FirstName, Student_MiddleName, Course, Student_Year, Address, Contact_Number, Birthday, Position, Organization) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement prCite = conn.prepareStatement(citeQuery);
+            prCite.setString(1, tfStudNunm.getText());
+            prCite.setString(2, tfLastName.getText());
+            prCite.setString(3, tfFirstName.getText());
+            prCite.setString(4, tfMiddleName.getText());
+            prCite.setString(5, tfCourse.getText());
+            prCite.setString(6, tfStudYear.getText());
+            prCite.setString(7, tfAddress.getText());
+            prCite.setString(8, tfContact.getText());
+            prCite.setString(9, tfBday.getText());
+            prCite.setString(10, tfPosition.getText());
+            prCite.setString(11, tfOrg.getText());
+            prCite.executeUpdate();
 
-            pr.setString(1, tfStudNunm.getText());    
-            pr.setString(2, tfLastName.getText());   
-            pr.setString(3, tfFirstName.getText());      
-            pr.setString(4, tfMiddleName.getText());  
-            pr.setString(5, tfCourse.getText());     
-            pr.setString(6, tfStudYear.getText());      
-            pr.setString(7, tfAddress.getText());     
-            pr.setString(8, tfContact.getText());      
-            pr.setString(9, tfBday.getText());         
-            pr.setString(10, tfPosition.getText());   
-            pr.setString(11, tfOrg.getText());       
-
-            pr.executeUpdate();
+            // Insert into tbl_login
+            String loginQuery = "INSERT INTO tbl_login (studentnum, password) VALUES (?, ?)";
+            PreparedStatement prLogin = conn.prepareStatement(loginQuery);
+            prLogin.setString(1, tfStudNunm.getText());
+            prLogin.setString(2, tfpass.getText());
+            prLogin.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Registered Successfully");
 
             conn.close();
-
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Registration Failed. Please check your input.");
+            ex.printStackTrace();
         }
-    } else if (open.getSource() == btnReset) {
+    }
+
+    private void reset() {
         tfStudNunm.setText("");
         tfLastName.setText("");
         tfFirstName.setText("");
@@ -253,8 +265,19 @@ public class Register implements ActionListener{
         tfBday.setText("");
         tfPosition.setText("");
         tfOrg.setText("");
+        tfpass.setText("");
     }
-}
-    
+
+    @Override
+     public void actionPerformed(ActionEvent open) {
+        if (open.getSource() == ExitBtn) {
+            new HomePage();
+            Acc.dispose();
+        } else if (open.getSource() == btnSubmit) {
+            register();
+        } else if (open.getSource() == btnReset) {
+            reset();
+        }
+    }
     
 }
