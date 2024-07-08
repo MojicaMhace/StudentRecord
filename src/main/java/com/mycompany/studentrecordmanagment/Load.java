@@ -1,43 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.studentrecordmanagment;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 
-/**
- *
- * @author mhace
- */
 public class Load {
     private JFrame Acc;
     private ImageIcon iconImage;
-    private JPanel depanel;
+    private JPanel depanel, BgImg1;
     private JLabel BgImg, lblload;
     private JTextArea tatext;
     private JProgressBar PBload;
+
     Load(){
-         //frame
+        // Frame
         Acc = new JFrame();
         Acc.setTitle("Login Page");
         Acc.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Acc.setResizable(false);
         Acc.setSize(1200, 680);
-        //icon
+        // Icon
         iconImage = new ImageIcon("icon.png");
         Acc.setIconImage(iconImage.getImage());
         Acc.getContentPane().setBackground(new Color(100,50,78));
         Acc.setLayout(new BorderLayout());
-        
+
         depanel = new JPanel();
         depanel.setLayout(null);
         depanel.setBackground(new Color(220, 190, 200));
         depanel.setBounds(0, 0, 1200, 680);
         Acc.add(depanel);
-        
+
         // Background
         BgImg = new JLabel();
         BgImg.setBounds(0, 0, 1200, 700);
@@ -47,29 +39,29 @@ public class Load {
         BgImg.setIcon(drawpic);
         depanel.add(BgImg);
         
-        //for text
+
+        // For text
         tatext = new JTextArea("Always do your best. What you plant now,\nyou will harvest later.");
-        tatext.setBounds(200, 200, 600, 60); 
-        tatext.setFont(new Font("Aptos", Font.BOLD, 20));
+        tatext.setBounds(500, 200, 600, 40); 
         tatext.setForeground(new Color(255, 255, 255));
         tatext.setBackground(new Color(0, 0, 0, 0));
         tatext.setLineWrap(true);
         tatext.setWrapStyleWord(true);
         BgImg.add(tatext);
-        
-        //lblload
+
+        // lblload
         lblload = new JLabel("Loading....");
-        lblload.setBounds(400,350,600,30);
-        lblload.setFont(new Font("Aptos", Font.BOLD, 20));
+        lblload.setBounds(560, 380, 600, 30);
         lblload.setForeground(new Color(255, 255, 255));
         BgImg.add(lblload);
-        
-        //Loading Screen
+//
+        // Loading Screen
         PBload = new JProgressBar();
-        PBload.setBounds(300, 400, 600, 30);
+        PBload.setBounds(300, 410, 600, 30);
         PBload.setStringPainted(true);
         depanel.add(PBload);
-    
+
+        depanel.add(BgImg);
         
         Acc.setVisible(true);
     }
@@ -86,9 +78,8 @@ public class Load {
                 PBload.setValue(i);
                 i++;
             }
-            
             Acc.dispose();
         }).start();
+    
     }
 }
-

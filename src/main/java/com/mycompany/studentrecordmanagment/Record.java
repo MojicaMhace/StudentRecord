@@ -182,7 +182,7 @@ public class Record implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent open) {
         if (open.getSource() == ExitBtn) {
-            new LoginPage();
+            new HomePage();
             Acc.dispose();
         }else if(open.getSource() == btnUpdate){
             new Register();

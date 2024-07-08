@@ -197,9 +197,10 @@ public class LoginPage implements ActionListener {
                 st.setString(1, userName);
                 st.setString(2, password);
                 ResultSet rs = st.executeQuery();
-                if (rs.next()) {
-                    Acc.dispose();
-                    new LoadingScreen();
+                 if (rs.next()) {
+                JOptionPane.showMessageDialog(null, "Sign In Successfully");
+                Acc.dispose();
+                new LoadingScreen();
                 } else {
                     loginAttempts++;
                     if (loginAttempts >= 5) {
