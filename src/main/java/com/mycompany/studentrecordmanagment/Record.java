@@ -159,6 +159,18 @@ public class Record implements ActionListener {
             Acc.dispose();
         }else if(open.getSource() == btnUpdate){
             new Register();
+        }else if(open.getSource()== btnDelete){
+            DefaultTableModel model = (DefaultTableModel) tblRecords.getModel();
+            int row = tblRecords.getSelectedRow();
+            if (row != -1) {
+            model.removeRow(row);
+            } else {
+                if (model.getRowCount() == 0) {
+                    JOptionPane.showMessageDialog(null, "Table is Empty!!!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a Row!!!");
+                }
+            }
         }
     }
 
