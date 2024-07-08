@@ -89,7 +89,7 @@ public class Record implements ActionListener {
 
   
         //update button
-        btnUpdate = new JButton("UPDATE");
+        btnUpdate = new JButton("ADD");
         btnUpdate.setBounds(100, 600, 100, 30);
         btnUpdate.setBackground(new Color(215, 60, 190));
         btnUpdate.setForeground(new Color(255, 255, 255));
@@ -182,10 +182,11 @@ public class Record implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent open) {
         if (open.getSource() == ExitBtn) {
-            new HomePage();
+            new LoginPage();
             Acc.dispose();
         }else if(open.getSource() == btnUpdate){
             new Register();
+            Acc.dispose();
         }else if(open.getSource()== btnDelete){
             DefaultTableModel model = (DefaultTableModel) tblRecords.getModel();
             int row = tblRecords.getSelectedRow();
